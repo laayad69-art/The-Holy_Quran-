@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZMAX - الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5e3f;
+            --secondary-color: #2d8a5c;
+            --accent-color: #d4af37;
+            --light-color: #f8f5e6;
+            --dark-color: #0d2818;
+            --text-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            border: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: white;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(26, 94, 63, 0.9), rgba(45, 138, 92, 0.9)), url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            background-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .dashboard-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .action-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-color);
+        }
+
+        .action-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .action-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+
+        .action-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        main {
+            flex: 1;
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .salawat {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-quran"></i>
+                <h1>Z<span>MAX</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="quran-reading.html">تتبع التلاوة</a></li>
+                    <li><a href="audio-library.html">المكتبة الصوتية</a></li>
+                    <li><a href="adhkar.html">الأذكار</a></li>
+                    <li><a href="daily-surah.html">السورة اليومية</a></li>
+                </ul>
+            </nav>
+            <div class="user-info" id="userInfo" style="display: none;">
+                <span class="user-name" id="userName"></span>
+                <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <h2>تسجيل الدخول إلى ZMAX</h2>
+            <p>أدخل اسمك للبدء في رحلتك القرآنية</p>
+            <input type="text" id="userNameInput" placeholder="أدخل اسمك هنا" autocomplete="off">
+            <button class="cta-button" onclick="login()">ابدأ الآن</button>
+        </div>
+    </div>
+
+    <main>
+        <section class="hero" id="hero">
+            <div class="container">
+                <h2>موقع تفاعلي لتتبع تلاوة القرآن الكريم</h2>
+                <p>سجل قراءتك، استمع إلى القرآن، اقرأ الأذكار اليومية، وتابع تقدمك في ختم القرآن الكريم</p>
+                <button class="cta-button" onclick="showLogin()">ابدأ رحلتك القرآنية</button>
+            </div>
+        </section>
+
+        <section id="dashboard" style="display: none;">
+            <div class="container">
+                <h2 class="section-title">لوحة التحكم</h2>
+                <div class="dashboard">
+                    <div class="dashboard-card">
+                        <i class="fas fa-book-open"></i>
+                        <h3>السور المقروءة</h3>
+                        <div id="readCount">0</div>
+                        <div class="progress-bar">
+                            <div class="progress" id="progressBar"></div>
+                        </div>
+                        <div id="progressText">0%</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <i class="fas fa-praying-hands"></i>
+                        <h3>الأذكار اليومية</h3>
+                        <div id="dhikrCount">0</div>
+                        <p>أذكار مكتملة اليوم</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <i class="fas fa-calendar-day"></i>
+                        <h3>أيام متتالية</h3>
+                        <div id="streakCount">0</div>
+                        <p>يوم من العبادة</p>
+                    </div>
+                    <div class="dashboard-card">
+                        <i class="fas fa-award"></i>
+                        <h3>إنجازات</h3>
+                        <div id="achievements">0</div>
+                        <p>إنجاز مكتمل</p>
+                    </div>
+                </div>
+
+                <div class="section-title" style="margin-top: 4rem;">
+                    <h2>الوصول السريع</h2>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="action-card" onclick="window.location.href='quran-reading.html'">
+                        <i class="fas fa-book-quran"></i>
+                        <h3>تتبع التلاوة</h3>
+                        <p>تابع قراءتك للقرآن الكريم ووصل إلى ختم القرآن</p>
+                    </div>
+                    <div class="action-card" onclick="window.location.href='audio-library.html'">
+                        <i class="fas fa-headphones"></i>
+                        <h3>المكتبة الصوتية</h3>
+                        <p>استمع إلى القرآن الكريم بصوت القارئ</p>
+                    </div>
+                    <div class="action-card" onclick="window.location.href='adhkar.html'">
+                        <i class="fas fa-pray"></i>
+                        <h3>الأذكار اليومية</h3>
+                        <p>اقرأ أذكار الصباح والمساء وبعد الصلاة والنوم</p>
+                    </div>
+                    <div class="action-card" onclick="window.location.href='daily-surah.html'">
+                        <i class="fas fa-star"></i>
+                        <h3>السورة اليومية</h3>
+                        <p>اقرأ السورة اليومية وحصل على مكافآت</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="site-info">
+                    <h3>ZMAX</h3>
+                    <div class="salawat">صَلِّ عَلَى سَيِّدِنَا مُحَمَّد</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = null;
+        let readSurahs = [];
+        let dailyDhikr = 0;
+        let streakDays = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+
+        function checkLoginStatus() {
+            const savedUser = localStorage.getItem('quranUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                readSurahs = JSON.parse(localStorage.getItem('readSurahs_' + currentUser) || '[]');
+                dailyDhikr = parseInt(localStorage.getItem('dailyDhikr_' + currentUser) || '0');
+                streakDays = parseInt(localStorage.getItem('streakDays_' + currentUser) || '0');
+                
+                updateUI();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function hideLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function login() {
+            const userName = document.getElementById('userNameInput').value.trim();
+            if (userName) {
+                currentUser = userName;
+                localStorage.setItem('quranUser', currentUser);
+                
+                if (!localStorage.getItem('readSurahs_' + currentUser)) {
+                    readSurahs = [];
+                    dailyDhikr = 0;
+                    streakDays = 0;
+                    saveUserData();
+                } else {
+                    readSurahs = JSON.parse(localStorage.getItem('readSurahs_' + currentUser) || '[]');
+                    dailyDhikr = parseInt(localStorage.getItem('dailyDhikr_' + currentUser) || '0');
+                    streakDays = parseInt(localStorage.getItem('streakDays_' + currentUser) || '0');
+                }
+                
+                hideLogin();
+                updateUI();
+            } else {
+                alert('الرجاء إدخال اسمك');
+            }
+        }
+
+        function logout() {
+            if (confirm('هل تريد تسجيل الخروج؟')) {
+                currentUser = null;
+                localStorage.removeItem('quranUser');
+                window.location.reload();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('userName').textContent = currentUser;
+            document.getElementById('userInfo').style.display = 'flex';
+            
+            updateDashboard();
+            
+            document.getElementById('hero').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        function updateDashboard() {
+            const readCount = readSurahs.length;
+            const totalSurahs = 114;
+            const progressPercentage = (readCount / totalSurahs) * 100;
+            
+            document.getElementById('readCount').textContent = readCount;
+            document.getElementById('progressBar').style.width = progressPercentage + '%';
+            document.getElementById('progressText').textContent = Math.round(progressPercentage) + '%';
+            document.getElementById('dhikrCount').textContent = dailyDhikr;
+            document.getElementById('streakCount').textContent = streakDays;
+            document.getElementById('achievements').textContent = Math.floor(readCount / 10);
+        }
+
+        function saveUserData() {
+            if (currentUser) {
+                localStorage.setItem('readSurahs_' + currentUser, JSON.stringify(readSurahs));
+                localStorage.setItem('dailyDhikr_' + currentUser, dailyDhikr.toString());
+                localStorage.setItem('streakDays_' + currentUser, streakDays.toString());
+            }
+        }
+    </script>
+</body>
+</html>
