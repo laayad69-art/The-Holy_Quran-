@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZMAX - الأذكار اليومية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5e3f;
+            --secondary-color: #2d8a5c;
+            --accent-color: #d4af37;
+            --light-color: #f8f5e6;
+            --dark-color: #0d2818;
+            --text-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        /* Dhikr Summary */
+        .dhikr-summary {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .summary-item {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            transition: transform 0.3s ease;
+        }
+
+        .summary-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .summary-item h3 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .summary-item .count {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin: 10px 0;
+        }
+
+        /* Dhikr Categories */
+        .dhikr-categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .dhikr-category {
+            background-color: #f5f5f5;
+            padding: 20px 30px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 200px;
+            border: 2px solid transparent;
+        }
+
+        .dhikr-category:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .dhikr-category.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .dhikr-category i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .dhikr-category.active i {
+            color: white;
+        }
+
+        .dhikr-category h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        /* Dhikr Content */
+        .dhikr-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        .dhikr-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .dhikr-text {
+            font-size: 1.8rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-color);
+        }
+
+        .dhikr-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .counter-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .counter-btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .counter-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .dhikr-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .action-btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .action-btn.primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .action-btn.secondary {
+            background-color: #eee;
+            color: #333;
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #ddd;
+            transform: translateY(-3px);
+        }
+
+        /* Back Button */
+        .back-button {
+            margin-bottom: 30px;
+        }
+
+        .back-button a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background-color: white;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .back-button a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .salawat {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .dhikr-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .dhikr-category {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .dhikr-text {
+                font-size: 1.5rem;
+            }
+            
+            .dhikr-counter {
+                gap: 15px;
+            }
+            
+            .counter-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            
+            .counter-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-quran"></i>
+                <h1>Z<span>MAX</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="quran-reading.html">تتبع التلاوة</a></li>
+                    <li><a href="audio-library.html">المكتبة الصوتية</a></li>
+                    <li><a href="adhkar.html" class="active">الأذكار</a></li>
+                    <li><a href="daily-surah.html">السورة اليومية</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Back Button -->
+            <div class="back-button">
+                <a href="index.html">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة إلى الرئيسية
+                </a>
+            </div>
+
+            <div class="section-title">
+                <h2>🕌 الأذكار اليومية</h2>
+                <p>اقرأ أذكار الصباح والمساء وبعد الصلاة والنوم واحفظ أجرك</p>
+            </div>
+
+            <!-- Dhikr Summary -->
+            <div class="dhikr-summary">
+                <h3>إحصائيات الأذكار</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <h3>أذكار اليوم</h3>
+                        <div class="count" id="todayCount">0</div>
+                        <p>ذكر مكتمل اليوم</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>أذكار الشهر</h3>
+                        <div class="count" id="monthCount">0</div>
+                        <p>ذكر مكتمل هذا الشهر</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3>الأيام المتتالية</h3>
+                        <div class="count" id="streakCount">0</div>
+                        <p>يوم من المواظبة</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dhikr Categories -->
+            <div class="dhikr-categories">
+                <div class="dhikr-category active" onclick="selectDhikrCategory('morning')">
+                    <i class="fas fa-sun"></i>
+                    <h3>أذكار الصباح</h3>
+                    <p>من طلوع الفجر إلى الزوال</p>
+                </div>
+                <div class="dhikr-category" onclick="selectDhikrCategory('evening')">
+                    <i class="fas fa-moon"></i>
+                    <h3>أذكار المساء</h3>
+                    <p>من الزوال إلى منتصف الليل</p>
+                </div>
+                <div class="dhikr-category" onclick="selectDhikrCategory('prayer')">
+                    <i class="fas fa-pray"></i>
+                    <h3>بعد الصلاة</h3>
+                    <p>أذكار ما بعد الصلوات</p>
+                </div>
+                <div class="dhikr-category" onclick="selectDhikrCategory('sleep')">
+                    <i class="fas fa-bed"></i>
+                    <h3>أذكار النوم</h3>
+                    <p>أذكار قبل النوم</p>
+                </div>
+            </div>
+
+            <!-- Dhikr Content -->
+            <div class="dhikr-container">
+                <div class="dhikr-content">
+                    <div class="dhikr-text" id="dhikrText">
+                        سبحان الله وبحمده سبحان الله العظيم
+                    </div>
+                    
+                    <div class="dhikr-counter">
+                        <button class="counter-btn" onclick="decreaseDhikr()">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <div class="counter-value" id="dhikrCounter">0</div>
+                        <button class="counter-btn" onclick="increaseDhikr()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    
+                    <div style="margin: 20px 0; color: #666;">
+                        <i class="fas fa-info-circle"></i>
+                        اضغط على + لزيادة العداد، - لتقليله، ثم انقر على "إكمال الذكر"
+                    </div>
+                    
+                    <div class="dhikr-actions">
+                        <button class="action-btn secondary" onclick="skipDhikr()">تخطي الذكر</button>
+                        <button class="action-btn primary" onclick="completeDhikr()">إكمال الذكر</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Dhikr List -->
+            <div class="dhikr-container">
+                <h3 style="text-align: center; margin-bottom: 30px;">الأذكار المكتملة اليوم</h3>
+                <div id="completedList" style="text-align: center; color: #666; font-style: italic;">
+                    لم تكمل أي أذكار بعد
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="site-info">
+                    <h3>ZMAX</h3>
+                    <div class="salawat">صَلِّ عَلَى سَيِّدِنَا مُحَمَّد</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // بيانات الأذكار
+        const adhkar = {
+            morning: [
+                "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+                "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+                "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+                "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+                "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ"
+            ],
+            evening: [
+                "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+                "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
+                "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+                "اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+                "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ"
+            ],
+            prayer: [
+                "أَسْتَغْفِرُ اللَّهَ (3 مرات) اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
+                "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+                "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ (33 مرة لكل واحدة)",
+                "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+                "لَا إِلَهَ إِلَّا اللَّهُ مُحَمَّدٌ رَسُولُ اللَّهِ، صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ"
+            ],
+            sleep: [
+                "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+                "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا، وَآوَانَا، فَكَمْ مِمَّنْ لَا كَافِيَ لَهُ وَلَا مُؤْوِيَ",
+                "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ (3 مرات)",
+                "سُبْحَانَ اللَّهِ (33 مرة)، الْحَمْدُ لِلَّهِ (33 مرة)، اللَّهُ أَكْبَرُ (34 مرة)",
+                "اللَّهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ، وَوَجَّهْتُ وَجْهِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَأَلْجَأْتُ ظَهْرِي إِلَيْكَ، رَغْبَةً وَرَهْبَةً إِلَيْكَ، لَا مَلْجَأَ وَلَا مَنْجَا مِنْكَ إِلَّا إِلَيْكَ، آمَنْتُ بِكِتَابِكَ الَّذِي أَنْزَلْتَ، وَنَبِيِّكَ الَّذِي أَرْسَلْتَ"
+            ]
+        };
+
+        // المتغيرات
+        let currentDhikrCategory = 'morning';
+        let currentDhikrIndex = 0;
+        let dhikrCount = 0;
+        let completedDhikr = [];
+        let currentUser = null;
+        let todayDhikr = 0;
+        let monthDhikr = 0;
+        let streakDays = 0;
+
+        // التهيئة عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            selectDhikrCategory('morning');
+            updateSummary();
+        });
+
+        // تحميل بيانات المستخدم
+        function loadUserData() {
+            currentUser = localStorage.getItem('quranUser');
+            if (currentUser) {
+                const today = new Date().toDateString();
+                const userData = JSON.parse(localStorage.getItem('dhikrData_' + currentUser) || '{}');
+                
+                todayDhikr = userData[today] || 0;
+                monthDhikr = userData.monthCount || 0;
+                streakDays = userData.streakDays || 0;
+                completedDhikr = userData.completed || [];
+                
+                updateCompletedList();
+            } else {
+                // إذا لم يكن هناك مستخدم، توجيه إلى الصفحة الرئيسية
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            }
+        }
+
+        // اختيار نوع الذكر
+        function selectDhikrCategory(category) {
+            currentDhikrCategory = category;
+            currentDhikrIndex = 0;
+            dhikrCount = 0;
+            
+            // تحديث الواجهة
+            document.querySelectorAll('.dhikr-category').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // العثور على الزر الذي تم النقر عليه
+            const buttons = document.querySelectorAll('.dhikr-category');
+            buttons.forEach(btn => {
+                if (btn.querySelector('h3').textContent.includes(getCategoryName(category))) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // عرض ذكر جديد
+            loadNextDhikr();
+        }
+
+        // الحصول على اسم الفئة
+        function getCategoryName(category) {
+            switch(category) {
+                case 'morning': return 'الصباح';
+                case 'evening': return 'المساء';
+                case 'prayer': return 'بعد الصلاة';
+                case 'sleep': return 'النوم';
+                default: return 'الصباح';
+            }
+        }
+
+        // تحميل الذكر التالي
+        function loadNextDhikr() {
+            const dhikrList = adhkar[currentDhikrCategory];
+            
+            if (dhikrList.length > 0) {
+                // اختر ذكراً عشوائياً لم يتم إكماله اليوم
+                let availableDhikr = [];
+                
+                for (let i = 0; i < dhikrList.length; i++) {
+                    const dhikrId = `${currentDhikrCategory}_${i}`;
+                    if (!completedDhikr.includes(dhikrId)) {
+                        availableDhikr.push(i);
+                    }
+                }
+                
+                if (availableDhikr.length > 0) {
+                    currentDhikrIndex = availableDhikr[Math.floor(Math.random() * availableDhikr.length)];
+                } else {
+                    // إذا اكتملت جميع الأذكار، أعد تعيينها
+                    currentDhikrIndex = Math.floor(Math.random() * dhikrList.length);
+                }
+                
+                document.getElementById('dhikrText').textContent = dhikrList[currentDhikrIndex];
+                document.getElementById('dhikrCounter').textContent = '0';
+                dhikrCount = 0;
+            }
+        }
+
+        // زيادة عداد الذكر
+        function increaseDhikr() {
+            dhikrCount++;
+            document.getElementById('dhikrCounter').textContent = dhikrCount;
+        }
+
+        // تقليل عداد الذكر
+        function decreaseDhikr() {
+            if (dhikrCount > 0) {
+                dhikrCount--;
+                document.getElementById('dhikrCounter').textContent = dhikrCount;
+            }
+        }
+
+        // إكمال الذكر
+        function completeDhikr() {
+            if (dhikrCount > 0) {
+                const dhikrId = `${currentDhikrCategory}_${currentDhikrIndex}`;
+                
+                // حفظ الذكر المكتمل
+                if (!completedDhikr.includes(dhikrId)) {
+                    completedDhikr.push(dhikrId);
+                }
+                
+                // تحديث الإحصائيات
+                todayDhikr += dhikrCount;
+                monthDhikr += dhikrCount;
+                streakDays++;
+                
+                // حفظ البيانات
+                saveDhikrData();
+                
+                // تحديث الواجهة
+                updateSummary();
+                updateCompletedList();
+                
+                // عرض رسالة نجاح
+                alert(`تم تسجيل ${dhikrCount} ذكر! المجموع اليومي: ${todayDhikr}`);
+                
+                // تحميل ذكر جديد
+                loadNextDhikr();
+            } else {
+                alert('الرجاء تحديد عدد التكرارات أولاً');
+            }
+        }
+
+        // تخطي الذكر
+        function skipDhikr() {
+            if (confirm('هل تريد تخطي هذا الذكر؟')) {
+                loadNextDhikr();
+            }
+        }
+
+        // تحديث الملخص
+        function updateSummary() {
+            document.getElementById('todayCount').textContent = todayDhikr;
+            document.getElementById('monthCount').textContent = monthDhikr;
+            document.getElementById('streakCount').textContent = streakDays;
+        }
+
+        // تحديث قائمة الأذكار المكتملة
+        function updateCompletedList() {
+            const completedList = document.getElementById('completedList');
+            
+            if (completedDhikr.length > 0) {
+                completedList.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+                        ${completedDhikr.map((id, index) => {
+                            const [category, idx] = id.split('_');
+                            const dhikrText = adhkar[category][parseInt(idx)];
+                            const shortText = dhikrText.length > 50 ? dhikrText.substring(0, 50) + '...' : dhikrText;
+                            return `
+                                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 10px; text-align: right;">
+                                    <div style="color: var(--primary-color); font-weight: bold; margin-bottom: 5px;">${getCategoryName(category)}</div>
+                                    <div>${shortText}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            } else {
+                completedList.innerHTML = '<p style="color: #666; font-style: italic;">لم تكمل أي أذكار بعد</p>';
+            }
+        }
+
+        // حفظ بيانات الأذكار
+        function saveDhikrData() {
+            if (currentUser) {
+                const today = new Date().toDateString();
+                const userData = {
+                    [today]: todayDhikr,
+                    monthCount: monthDhikr,
+                    streakDays: streakDays,
+                    completed: completedDhikr,
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                localStorage.setItem('dhikrData_' + currentUser, JSON.stringify(userData));
+                
+                // تحديث بيانات التلاوة أيضاً
+                const quranData = JSON.parse(localStorage.getItem('readSurahs_' + currentUser) || '[]');
+                localStorage.setItem('dailyDhikr_' + currentUser, todayDhikr.toString());
+                localStorage.setItem('streakDays_' + currentUser, streakDays.toString());
+            }
+        }
+    </script>
+</body>
+</html>
