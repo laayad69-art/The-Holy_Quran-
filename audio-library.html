@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZMAX - المكتبة الصوتية</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5e3f;
+            --secondary-color: #2d8a5c;
+            --accent-color: #d4af37;
+            --light-color: #f8f5e6;
+            --dark-color: #0d2818;
+            --text-color: #333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            direction: rtl;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        main {
+            flex: 1;
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        .audio-player-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .current-playing {
+            margin-bottom: 30px;
+        }
+
+        .current-playing h3 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .current-playing p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .audio-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .audio-controls button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-controls button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .audio-controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .surahs-list-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .filter-btn:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+
+        .surahs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .audio-surah {
+            background-color: #f9f9f9;
+            padding: 20px 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .audio-surah:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .audio-surah.playing {
+            background-color: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .audio-surah-number {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .audio-surah.playing .audio-surah-number {
+            color: white;
+        }
+
+        .audio-surah-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .audio-surah-details {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .audio-surah.playing .audio-surah-details {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .back-button {
+            margin-bottom: 30px;
+        }
+
+        .back-button a {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background-color: white;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .back-button a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 2rem 0;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .salawat {
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .surahs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .audio-controls {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .surahs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            
+            .audio-controls button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-quran"></i>
+                <h1>Z<span>MAX</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="quran-reading.html">تتبع التلاوة</a></li>
+                    <li><a href="audio-library.html" class="active">المكتبة الصوتية</a></li>
+                    <li><a href="adhkar.html">الأذكار</a></li>
+                    <li><a href="daily-surah.html">السورة اليومية</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="back-button">
+                <a href="index.html">
+                    <i class="fas fa-arrow-right"></i>
+                    العودة إلى الرئيسية
+                </a>
+            </div>
+
+            <div class="section-title">
+                <h2>🎵 المكتبة الصوتية للقرآن الكريم</h2>
+                <p>استمع إلى تلاوة القرآن الكريم كاملاً (114 سورة)</p>
+            </div>
+
+            <div class="audio-player-container">
+                <div class="current-playing">
+                    <h3 id="currentSurahName">سورة الفاتحة</h3>
+                    <p id="currentSurahInfo">جاري التحميل...</p>
+                </div>
+
+                <audio id="quranAudio" preload="metadata"></audio>
+
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <div class="time-info">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
+                    </div>
+                </div>
+
+                <div class="audio-controls">
+                    <button id="prevBtn" onclick="playPrevious()" disabled>
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="playBtn" onclick="togglePlay()">
+                        <i class="fas fa-play" id="playIcon"></i>
+                    </button>
+                    <button id="nextBtn" onclick="playNext()">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <label for="volumeControl">الصوت:</label>
+                    <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.7" onchange="changeVolume(this.value)" style="width: 200px;">
+                </div>
+            </div>
+
+            <div class="surahs-list-container">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="ابحث عن سورة..." onkeyup="searchSurahs()">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" onclick="filterSurahs('all')">الكل</button>
+                        <button class="filter-btn" onclick="filterSurahs('makki')">المكية</button>
+                        <button class="filter-btn" onclick="filterSurahs('madani')">المدنية</button>
+                        <button class="filter-btn" onclick="filterSurahs('short')">القصيرة</button>
+                    </div>
+                </div>
+
+                <h3 style="text-align: center; margin-bottom: 20px;">اختر سورة للاستماع</h3>
+                <div class="surahs-grid" id="surahsGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="site-info">
+                    <h3>ZMAX</h3>
+                    <div class="salawat">صَلِّ عَلَى سَيِّدِنَا مُحَمَّد</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const surahs = [
+            { number: 1, name: "الفاتحة", verses: 7, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/001.mp3" },
+            { number: 2, name: "البقرة", verses: 286, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/002.mp3" },
+            { number: 3, name: "آل عمران", verses: 200, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/003.mp3" },
+            { number: 4, name: "النساء", verses: 176, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/004.mp3" },
+            { number: 5, name: "المائدة", verses: 120, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/005.mp3" },
+            { number: 6, name: "الأنعام", verses: 165, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/006.mp3" },
+            { number: 7, name: "الأعراف", verses: 206, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/007.mp3" },
+            { number: 8, name: "الأنفال", verses: 75, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/008.mp3" },
+            { number: 9, name: "التوبة", verses: 129, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/009.mp3" },
+            { number: 10, name: "يونس", verses: 109, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/010.mp3" },
+            { number: 11, name: "هود", verses: 123, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/011.mp3" },
+            { number: 12, name: "يوسف", verses: 111, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/012.mp3" },
+            { number: 13, name: "الرعد", verses: 43, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/013.mp3" },
+            { number: 14, name: "إبراهيم", verses: 52, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/014.mp3" },
+            { number: 15, name: "الحجر", verses: 99, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/015.mp3" },
+            { number: 16, name: "النحل", verses: 128, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/016.mp3" },
+            { number: 17, name: "الإسراء", verses: 111, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/017.mp3" },
+            { number: 18, name: "الكهف", verses: 110, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/018.mp3" },
+            { number: 19, name: "مريم", verses: 98, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/019.mp3" },
+            { number: 20, name: "طه", verses: 135, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/020.mp3" },
+            { number: 21, name: "الأنبياء", verses: 112, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/021.mp3" },
+            { number: 22, name: "الحج", verses: 78, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/022.mp3" },
+            { number: 23, name: "المؤمنون", verses: 118, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/023.mp3" },
+            { number: 24, name: "النور", verses: 64, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/024.mp3" },
+            { number: 25, name: "الفرقان", verses: 77, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/025.mp3" },
+            { number: 26, name: "الشعراء", verses: 227, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/026.mp3" },
+            { number: 27, name: "النمل", verses: 93, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/027.mp3" },
+            { number: 28, name: "القصص", verses: 88, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/028.mp3" },
+            { number: 29, name: "العنكبوت", verses: 69, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/029.mp3" },
+            { number: 30, name: "الروم", verses: 60, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/030.mp3" },
+            { number: 31, name: "لقمان", verses: 34, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/031.mp3" },
+            { number: 32, name: "السجدة", verses: 30, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/032.mp3" },
+            { number: 33, name: "الأحزاب", verses: 73, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/033.mp3" },
+            { number: 34, name: "سبأ", verses: 54, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/034.mp3" },
+            { number: 35, name: "فاطر", verses: 45, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/035.mp3" },
+            { number: 36, name: "يس", verses: 83, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/036.mp3" },
+            { number: 37, name: "الصافات", verses: 182, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/037.mp3" },
+            { number: 38, name: "ص", verses: 88, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/038.mp3" },
+            { number: 39, name: "الزمر", verses: 75, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/039.mp3" },
+            { number: 40, name: "غافر", verses: 85, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/040.mp3" },
+            { number: 41, name: "فصلت", verses: 54, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/041.mp3" },
+            { number: 42, name: "الشورى", verses: 53, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/042.mp3" },
+            { number: 43, name: "الزخرف", verses: 89, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/043.mp3" },
+            { number: 44, name: "الدخان", verses: 59, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/044.mp3" },
+            { number: 45, name: "الجاثية", verses: 37, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/045.mp3" },
+            { number: 46, name: "الأحقاف", verses: 35, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/046.mp3" },
+            { number: 47, name: "محمد", verses: 38, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/047.mp3" },
+            { number: 48, name: "الفتح", verses: 29, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/048.mp3" },
+            { number: 49, name: "الحجرات", verses: 18, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/049.mp3" },
+            { number: 50, name: "ق", verses: 45, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/050.mp3" },
+            { number: 51, name: "الذاريات", verses: 60, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/051.mp3" },
+            { number: 52, name: "الطور", verses: 49, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/052.mp3" },
+            { number: 53, name: "النجم", verses: 62, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/053.mp3" },
+            { number: 54, name: "القمر", verses: 55, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/054.mp3" },
+            { number: 55, name: "الرحمن", verses: 78, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/055.mp3" },
+            { number: 56, name: "الواقعة", verses: 96, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/056.mp3" },
+            { number: 57, name: "الحديد", verses: 29, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/057.mp3" },
+            { number: 58, name: "المجادلة", verses: 22, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/058.mp3" },
+            { number: 59, name: "الحشر", verses: 24, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/059.mp3" },
+            { number: 60, name: "الممتحنة", verses: 13, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/060.mp3" },
+            { number: 61, name: "الصف", verses: 14, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/061.mp3" },
+            { number: 62, name: "الجمعة", verses: 11, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/062.mp3" },
+            { number: 63, name: "المنافقون", verses: 11, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/063.mp3" },
+            { number: 64, name: "التغابن", verses: 18, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/064.mp3" },
+            { number: 65, name: "الطلاق", verses: 12, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/065.mp3" },
+            { number: 66, name: "التحريم", verses: 12, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/066.mp3" },
+            { number: 67, name: "الملك", verses: 30, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/067.mp3" },
+            { number: 68, name: "القلم", verses: 52, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/068.mp3" },
+            { number: 69, name: "الحاقة", verses: 52, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/069.mp3" },
+            { number: 70, name: "المعارج", verses: 44, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/070.mp3" },
+            { number: 71, name: "نوح", verses: 28, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/071.mp3" },
+            { number: 72, name: "الجن", verses: 28, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/072.mp3" },
+            { number: 73, name: "المزمل", verses: 20, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/073.mp3" },
+            { number: 74, name: "المدثر", verses: 56, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/074.mp3" },
+            { number: 75, name: "القيامة", verses: 40, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/075.mp3" },
+            { number: 76, name: "الإنسان", verses: 31, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/076.mp3" },
+            { number: 77, name: "المرسلات", verses: 50, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/077.mp3" },
+            { number: 78, name: "النبأ", verses: 40, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/078.mp3" },
+            { number: 79, name: "النازعات", verses: 46, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/079.mp3" },
+            { number: 80, name: "عبس", verses: 42, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/080.mp3" },
+            { number: 81, name: "التكوير", verses: 29, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/081.mp3" },
+            { number: 82, name: "الانفطار", verses: 19, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/082.mp3" },
+            { number: 83, name: "المطففين", verses: 36, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/083.mp3" },
+            { number: 84, name: "الانشقاق", verses: 25, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/084.mp3" },
+            { number: 85, name: "البروج", verses: 22, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/085.mp3" },
+            { number: 86, name: "الطارق", verses: 17, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/086.mp3" },
+            { number: 87, name: "الأعلى", verses: 19, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/087.mp3" },
+            { number: 88, name: "الغاشية", verses: 26, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/088.mp3" },
+            { number: 89, name: "الفجر", verses: 30, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/089.mp3" },
+            { number: 90, name: "البلد", verses: 20, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/090.mp3" },
+            { number: 91, name: "الشمس", verses: 15, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/091.mp3" },
+            { number: 92, name: "الليل", verses: 21, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/092.mp3" },
+            { number: 93, name: "الضحى", verses: 11, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/093.mp3" },
+            { number: 94, name: "الشرح", verses: 8, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/094.mp3" },
+            { number: 95, name: "التين", verses: 8, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/095.mp3" },
+            { number: 96, name: "العلق", verses: 19, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/096.mp3" },
+            { number: 97, name: "القدر", verses: 5, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/097.mp3" },
+            { number: 98, name: "البينة", verses: 8, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/098.mp3" },
+            { number: 99, name: "الزلزلة", verses: 8, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/099.mp3" },
+            { number: 100, name: "العاديات", verses: 11, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/100.mp3" },
+            { number: 101, name: "القارعة", verses: 11, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/101.mp3" },
+            { number: 102, name: "التكاثر", verses: 8, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/102.mp3" },
+            { number: 103, name: "العصر", verses: 3, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/103.mp3" },
+            { number: 104, name: "الهمزة", verses: 9, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/104.mp3" },
+            { number: 105, name: "الفيل", verses: 5, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/105.mp3" },
+            { number: 106, name: "قريش", verses: 4, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/106.mp3" },
+            { number: 107, name: "الماعون", verses: 7, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/107.mp3" },
+            { number: 108, name: "الكوثر", verses: 3, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/108.mp3" },
+            { number: 109, name: "الكافرون", verses: 6, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/109.mp3" },
+            { number: 110, name: "النصر", verses: 3, type: "مدنية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/110.mp3" },
+            { number: 111, name: "المسد", verses: 5, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/111.mp3" },
+            { number: 112, name: "الإخلاص", verses: 4, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/112.mp3" },
+            { number: 113, name: "الفلق", verses: 5, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/113.mp3" },
+            { number: 114, name: "الناس", verses: 6, type: "مكية", audioUrl: "https://download.quranicaudio.com/quran/mishaari_raashid_al_3afaasee/114.mp3" }
+        ];
+
+        let currentSurahIndex = 0;
+        let audio = null;
+        let isPlaying = false;
+        let currentFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            audio = document.getElementById('quranAudio');
+            generateSurahsGrid();
+            loadSurah(0);
+            setupAudioEvents();
+        });
+
+        function generateSurahsGrid() {
+            const surahsGrid = document.getElementById('surahsGrid');
+            surahsGrid.innerHTML = '';
+            
+            surahs.forEach((surah, index) => {
+                const surahElement = document.createElement('div');
+                surahElement.className = 'audio-surah';
+                surahElement.innerHTML = `
+                    <div class="audio-surah-number">${surah.number}</div>
+                    <div class="audio-surah-name">${surah.name}</div>
+                    <div class="audio-surah-details">${surah.verses} آية - ${surah.type}</div>
+                `;
+                
+                surahElement.onclick = () => playSurah(index);
+                surahsGrid.appendChild(surahElement);
+            });
+        }
+
+        function setupAudioEvents() {
+            audio.addEventListener('timeupdate', updateProgressBar);
+            audio.addEventListener('loadedmetadata', updateDuration);
+            audio.addEventListener('ended', playNext);
+        }
+
+        function playSurah(index) {
+            currentSurahIndex = index;
+            loadSurah(index);
+            
+            document.querySelectorAll('.audio-surah').forEach((el, i) => {
+                if (i === index) {
+                    el.classList.add('playing');
+                } else {
+                    el.classList.remove('playing');
+                }
+            });
+        }
+
+        function loadSurah(index) {
+            const surah = surahs[index];
+            document.getElementById('currentSurahName').textContent = `سورة ${surah.name}`;
+            document.getElementById('currentSurahInfo').textContent = `${surah.verses} آية - ${surah.type}`;
+            document.getElementById('playIcon').className = 'fas fa-play';
+            isPlaying = false;
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === surahs.length - 1;
+            audio.src = surah.audioUrl;
+            audio.load();
+        }
+
+        function togglePlay() {
+            if (audio.src) {
+                if (isPlaying) {
+                    audio.pause();
+                    document.getElementById('playIcon').className = 'fas fa-play';
+                } else {
+                    audio.play();
+                    document.getElementById('playIcon').className = 'fas fa-pause';
+                }
+                isPlaying = !isPlaying;
+            }
+        }
+
+        function playNext() {
+            if (currentSurahIndex < surahs.length - 1) {
+                playSurah(currentSurahIndex + 1);
+                if (isPlaying) audio.play();
+            }
+        }
+
+        function playPrevious() {
+            if (currentSurahIndex > 0) {
+                playSurah(currentSurahIndex - 1);
+                if (isPlaying) audio.play();
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = document.getElementById('progress');
+            const currentTime = document.getElementById('currentTime');
+            const duration = document.getElementById('duration');
+            if (audio.duration) {
+                const progressPercent = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = `${progressPercent}%`;
+                currentTime.textContent = formatTime(audio.currentTime);
+                duration.textContent = formatTime(audio.duration);
+            }
+        }
+
+        function updateDuration() {
+            document.getElementById('duration').textContent = formatTime(audio.duration);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function changeVolume(value) {
+            audio.volume = value;
+        }
+
+        function searchSurahs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const surahElements = document.querySelectorAll('.audio-surah');
+            surahElements.forEach((el, index) => {
+                const surah = surahs[index];
+                const surahName = surah.name.toLowerCase();
+                const surahNumber = surah.number.toString();
+                el.style.display = (surahName.includes(searchTerm) || surahNumber.includes(searchTerm)) ? 'block' : 'none';
+            });
+        }
+
+        function filterSurahs(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            const surahElements = document.querySelectorAll('.audio-surah');
+            surahElements.forEach((el, index) => {
+                const surah = surahs[index];
+                let show = false;
+                switch(filter) {
+                    case 'all': show = true; break;
+                    case 'makki': show = surah.type === 'مكية'; break;
+                    case 'madani': show = surah.type === 'مدنية'; break;
+                    case 'short': show = surah.verses <= 50; break;
+                }
+                el.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        document.getElementById('progressBar').addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
+        });
+    </script>
+</body>
+</html>
